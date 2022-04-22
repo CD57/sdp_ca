@@ -4,15 +4,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sdp_ca/views/create_user_page.dart';
 
+import '../models/user_details_model.dart';
 import '../models/user_model.dart';
 
 class UserController extends GetxController {
   final CollectionReference<Map<String, dynamic>> usersRef =
       FirebaseFirestore.instance.collection('users');
   late User? currentUser = FirebaseAuth.instance.currentUser;
+  late UserDetails aUsersDetails;
 
   // Checks if user exists, creates user if not found
   checkUserExists() async {
+    currentUser = FirebaseAuth.instance.currentUser;
     if (kDebugMode) {
       print("user_controller.dart - checkUserExists()");
     }
@@ -38,8 +41,7 @@ class UserController extends GetxController {
   }
 
   // Checks if user details exists, creates user details if not found
-  createUserDetails(String name, String shippingAddress, String paymentMethod,
-      String phoneNumber, bool isAdmin) async {
+  createUserDetails(UserDetails _aUsersDetails) async {
     if (kDebugMode) {
       print("user_controller.dart - createUserDetails()");
     }
@@ -58,10 +60,10 @@ class UserController extends GetxController {
           .collection("UserDetails")
           .doc(currentUser?.uid)
           .set({
-        "name": name,
-        "shippingAddress": shippingAddress,
-        "paymentMethod": paymentMethod,
-        "phoneNumber": phoneNumber,
+        "name": aUsersDetails.name,
+        "shippingAddress": aUsersDetails.shippingAddress,
+        "paymentMethod": aUsersDetails.paymentMethod,
+        "phoneNumber": aUsersDetails.phoneNumber,
       });
       docSnapShot = await usersRef
           .doc(currentUser?.uid)
@@ -72,7 +74,7 @@ class UserController extends GetxController {
         print("user_controller.dart - New User Details Added: " +
             currentUser!.email!);
       }
-      currentUser!.updateDisplayName(name);
+      currentUser!.updateDisplayName(aUsersDetails.name);
       Get.back();
     } else {
       if (kDebugMode) {

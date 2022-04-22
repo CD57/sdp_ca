@@ -1,32 +1,29 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sdp_ca/models/user_details_model.dart';
-import 'package:sdp_ca/models/user_model.dart';
-
-import '../controllers/user_controller.dart';
+import '../controllers/item_controller.dart';
+import '../models/item_model.dart';
 import '../widgets/custom_button_widget.dart';
+import '../widgets/top_bar_widget.dart';
 import '../widgets/user_input_widget.dart';
 
-class CreateUserPage extends StatefulWidget {
-  const CreateUserPage({Key? key}) : super(key: key);
-
+class CreateItemPage extends StatefulWidget {
+  const CreateItemPage({Key? key}) : super(key: key);
   @override
-  State<CreateUserPage> createState() => _CreateUserPageState();
+  State<CreateItemPage> createState() => _CreateItemPageState();
 }
 
-class _CreateUserPageState extends State<CreateUserPage> {
-  final UserController userController = Get.put(UserController());
+class _CreateItemPageState extends State<CreateItemPage> {
+  final ItemController _itemController = Get.put(ItemController());
   final _inputFormKey = GlobalKey<FormState>();
-
-  late UserDetails _aUser;
   late double _deviceHeight;
   late double _deviceWidth;
+  late final ItemModel _anItem = ItemModel();
 
   @override
   Widget build(BuildContext context) {
     if (kDebugMode) {
-      print("create_user_page.dart - build()");
+      print("create_item_page.dart - build()");
     }
     _deviceHeight = MediaQuery.of(context).size.height;
     _deviceWidth = MediaQuery.of(context).size.width;
@@ -48,7 +45,17 @@ class _CreateUserPageState extends State<CreateUserPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _userDetailsForm(),
+            TopBar(
+              'Create an Item',
+              primaryAction: IconButton(
+                icon: const Icon(Icons.keyboard_return_rounded,
+                    color: Colors.white),
+                onPressed: () {
+                  Get.back();
+                },
+              ),
+            ),
+            _itemDetailsForm(),
             SizedBox(
               height: _deviceHeight * 0.1,
             ),
@@ -62,7 +69,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
     );
   }
 
-  Widget _userDetailsForm() {
+  Widget _itemDetailsForm() {
     return SizedBox(
       height: _deviceHeight * 0.50,
       child: Form(
@@ -75,11 +82,11 @@ class _CreateUserPageState extends State<CreateUserPage> {
             UserInputForm(
                 onSaved: (_value) {
                   setState(() {
-                    _aUser.name = _value;
+                    _anItem.title = _value;
                   });
                 },
                 regex: r'.{3,}',
-                hint: "Full Name",
+                hint: "Unique Item Title",
                 hidden: false),
             SizedBox(
               height: _deviceHeight * 0.01,
@@ -87,11 +94,11 @@ class _CreateUserPageState extends State<CreateUserPage> {
             UserInputForm(
                 onSaved: (_value) {
                   setState(() {
-                    _aUser.shippingAddress = _value;
+                    _anItem.manufacturer = _value;
                   });
                 },
                 regex: r'.{3,}',
-                hint: "Shipping Address",
+                hint: "Manufacturer",
                 hidden: false),
             SizedBox(
               height: _deviceHeight * 0.01,
@@ -99,11 +106,11 @@ class _CreateUserPageState extends State<CreateUserPage> {
             UserInputForm(
                 onSaved: (_value) {
                   setState(() {
-                    _aUser.paymentMethod = _value;
+                    _anItem.price = _value;
                   });
                 },
-                regex: r'.{3,}',
-                hint: "Payment Method",
+                regex: r'.{1,}',
+                hint: "Price",
                 hidden: false),
             SizedBox(
               height: _deviceHeight * 0.01,
@@ -111,11 +118,11 @@ class _CreateUserPageState extends State<CreateUserPage> {
             UserInputForm(
                 onSaved: (_value) {
                   setState(() {
-                    _aUser.phoneNumber = _value;
+                    _anItem.stockLevel = _value;
                   });
                 },
-                regex: r".{8,}",
-                hint: "Phone Number",
+                regex: r".{1,}",
+                hint: "Stock Level",
                 hidden: false),
             SizedBox(
               height: _deviceHeight * 0.01,
@@ -128,17 +135,18 @@ class _CreateUserPageState extends State<CreateUserPage> {
 
   Widget _customButton() {
     return CustomButton(
-        name: "Set Details",
+        name: "Add Item to Stock",
         height: _deviceHeight * 0.065,
         width: _deviceWidth * 0.65,
-        onPressed: () async {
+        onPressed: () {
           if (_inputFormKey.currentState!.validate()) {
             _inputFormKey.currentState!.save();
-            userController.createUserDetails(_aUser);
+            _itemController.createItem(_anItem);
+            Get.back();
           } else {
             if (kDebugMode) {
               print(
-                  "registration_page.dart - _registerButton - onPressed: Error");
+                  "Create_item_page.dart - _registerButton - onPressed: Error");
             }
           }
         });

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:sdp_ca/views/profile_page.dart';
 import '../controllers/index_controller.dart';
 import '../controllers/user_controller.dart';
+import 'admin_items_menu_page.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -36,11 +37,11 @@ class _HomeState extends State<Home> {
       bottomNavigationBar: CupertinoTabBar(
           currentIndex: indexController.index.value,
           onTap: onTap,
-          activeColor: Colors.green,
+          activeColor: Colors.white,
           items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.inventory_rounded)),
             BottomNavigationBarItem(icon: Icon(Icons.search_rounded)),
-            BottomNavigationBarItem(icon: Icon(Icons.account_circle)),
+            BottomNavigationBarItem(icon: Icon(Icons.shopping_basket_rounded)),
+            BottomNavigationBarItem(icon: Icon(Icons.account_circle_rounded)),
           ]),
     );
   }
@@ -53,8 +54,8 @@ class _HomeState extends State<Home> {
   // Displays Admin Menu if isAdmin is true
   buildAdminMenu() {
     return PageView(children: const <Widget>[
-      Text("FIRST ADMIN PAGE"),
-      Text("SECOND ADMIN PAGE"),
+      AdminItemMenuPage(),
+      Text("ADMIN STOCK PAGE"),
       ProfilePage(), // Profile Page
     ], controller: pageController, onPageChanged: onPageChanged);
   }
@@ -62,8 +63,8 @@ class _HomeState extends State<Home> {
   // Displays User Menu
   buildUserMenu() {
     return PageView(children: const <Widget>[
-      Text("FIRST USER PAGE"),
-      Text("SECOND USER PAGE"),
+      Text("USER SEARCH PAGE"),
+      Text("USER BASKET PAGE"),
       ProfilePage(), // Profile Page
     ], controller: pageController, onPageChanged: onPageChanged);
   }
@@ -84,6 +85,7 @@ class _HomeState extends State<Home> {
     );
   }
 
+  // Check details regarding current user
   void checkUser() async {
     await userController.checkUserExists();
     await checkAdmin();
@@ -100,6 +102,4 @@ class _HomeState extends State<Home> {
       }
     });
   }
-
-  
 }

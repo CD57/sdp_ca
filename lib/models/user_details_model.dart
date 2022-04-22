@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserDetails {
   final String uid;
-  final String name;
-  final String shippingAddress;
-  final String paymentMethod;
-  final String phoneNumber;
+  late final String name;
+  late final String shippingAddress;
+  late final String paymentMethod;
+  late final String phoneNumber;
 
   UserDetails({
     required this.uid,
