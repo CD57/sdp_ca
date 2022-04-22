@@ -6,7 +6,11 @@ class ItemModel {
   late String price = "";
   late String stockLevel = "";
 
-  ItemModel({title, manufacturer, price, stockLevel});
+  ItemModel(
+      {required this.title,
+      required this.manufacturer,
+      required this.price,
+      required this.stockLevel});
 
   factory ItemModel.fromDocument(DocumentSnapshot doc) {
     return ItemModel(
@@ -14,6 +18,15 @@ class ItemModel {
         manufacturer: doc['manufacturer'],
         price: doc['price'],
         stockLevel: doc['stockLevel']);
+  }
+
+  factory ItemModel.fromJSON(Map<String, dynamic> _json) {
+    return ItemModel(
+      title: _json["title"],
+      manufacturer: _json["manufacturer"],
+      price: _json["price"],
+      stockLevel: _json["stockLevel"],
+    );
   }
 
   @override

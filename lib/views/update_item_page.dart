@@ -2,30 +2,32 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/item_controller.dart';
+import '../models/item_model.dart';
 import '../widgets/custom_button_widget.dart';
 import '../widgets/top_bar_widget.dart';
 import '../widgets/user_input_widget.dart';
 
-class CreateItemPage extends StatefulWidget {
-  const CreateItemPage({Key? key}) : super(key: key);
+class UpdateItemPage extends StatefulWidget {
+  final ItemModel anItem;
+  const UpdateItemPage({Key? key, required this.anItem}) : super(key: key);
   @override
-  State<CreateItemPage> createState() => _CreateItemPageState();
+  State<UpdateItemPage> createState() => _UpdateItemPageState();
 }
 
-class _CreateItemPageState extends State<CreateItemPage> {
+class _UpdateItemPageState extends State<UpdateItemPage> {
   final ItemController _itemController = Get.put(ItemController());
   final _inputFormKey = GlobalKey<FormState>();
   late double _deviceHeight;
   late double _deviceWidth;
-  late String _title;
-  late String _manufacturer;
-  late String _price;
-  late String _stockLevel;
+  late String _title = widget.anItem.title;
+  late String _manufacturer = widget.anItem.manufacturer;
+  late String _price = widget.anItem.price;
+  late String _stockLevel = widget.anItem.stockLevel;
 
   @override
   Widget build(BuildContext context) {
     if (kDebugMode) {
-      print("create_item_page.dart - build()");
+      print("update_item_page.dart - build()");
     }
     _deviceHeight = MediaQuery.of(context).size.height;
     _deviceWidth = MediaQuery.of(context).size.width;
@@ -48,7 +50,7 @@ class _CreateItemPageState extends State<CreateItemPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             TopBar(
-              'Create an Item',
+              'Update Item: ' + widget.anItem.title,
               primaryAction: IconButton(
                 icon: const Icon(Icons.keyboard_return_rounded,
                     color: Colors.white),
@@ -82,53 +84,53 @@ class _CreateItemPageState extends State<CreateItemPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             UserInputForm(
-                initValue: "",
+                initValue: widget.anItem.title,
                 onSaved: (_value) {
                   setState(() {
                     _title = _value;
                   });
                 },
                 regex: r'.{3,}',
-                hint: "Unique Item Title",
+                hint: "Title: " + widget.anItem.title,
                 hidden: false),
             SizedBox(
               height: _deviceHeight * 0.01,
             ),
             UserInputForm(
-                initValue: "",
+                initValue: widget.anItem.manufacturer,
                 onSaved: (_value) {
                   setState(() {
                     _manufacturer = _value;
                   });
                 },
                 regex: r'.{3,}',
-                hint: "Manufacturer",
+                hint: "Manufacturer: " + widget.anItem.manufacturer,
                 hidden: false),
             SizedBox(
               height: _deviceHeight * 0.01,
             ),
             UserInputForm(
-                initValue: "",
+                initValue: widget.anItem.price,
                 onSaved: (_value) {
                   setState(() {
                     _price = _value;
                   });
                 },
                 regex: r'.{1,}',
-                hint: "Price",
+                hint: "Price: " + widget.anItem.price,
                 hidden: false),
             SizedBox(
               height: _deviceHeight * 0.01,
             ),
             UserInputForm(
-                initValue: "",
+                initValue: widget.anItem.stockLevel,
                 onSaved: (_value) {
                   setState(() {
                     _stockLevel = _value;
                   });
                 },
                 regex: r".{1,}",
-                hint: "Stock Level",
+                hint: "Stock Level: " + widget.anItem.stockLevel,
                 hidden: false),
             SizedBox(
               height: _deviceHeight * 0.01,
@@ -141,19 +143,26 @@ class _CreateItemPageState extends State<CreateItemPage> {
 
   Widget _customButton() {
     return CustomButton(
-        name: "Add Item to Stock",
+        name: "Update Item Details",
         height: _deviceHeight * 0.065,
         width: _deviceWidth * 0.65,
-        onPressed: () {
+        onPressed: () async {
           if (_inputFormKey.currentState!.validate()) {
             _inputFormKey.currentState!.save();
-            _itemController.createItem(
-                _title, _manufacturer, _price, _stockLevel);
+            ItemModel updateItem = ItemModel(
+                title: _title,
+                manufacturer: _manufacturer,
+                price: _price,
+                stockLevel: _stockLevel);
+            await _itemController.updateItem(widget.anItem.title, updateItem);
+            Get.back();
+            Get.back();
+            Get.back();
             Get.back();
           } else {
             if (kDebugMode) {
               print(
-                  "Create_item_page.dart - _registerButton - onPressed: Error");
+                  "update_item_page.dart - _registerButton - onPressed: Error");
             }
           }
         });

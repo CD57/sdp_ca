@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class UserInputForm extends StatelessWidget {
   final Function(String) onSaved;
+  final String initValue;
   final String regex;
   final String hint;
   final bool hidden;
@@ -9,6 +10,7 @@ class UserInputForm extends StatelessWidget {
   const UserInputForm(
       {Key? key,
       required this.onSaved,
+      required this.initValue,
       required this.regex,
       required this.hint,
       required this.hidden})
@@ -17,6 +19,7 @@ class UserInputForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      initialValue: initValue,
       onSaved: (_value) => onSaved(_value!),
       obscureText: hidden,
       validator: (_value) {

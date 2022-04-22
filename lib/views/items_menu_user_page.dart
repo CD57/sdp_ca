@@ -1,19 +1,17 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:sdp_ca/views/create_item_page.dart';
 import '../widgets/custom_button_widget.dart';
 import '../widgets/top_bar_widget.dart';
 
-class AdminItemMenuPage extends StatefulWidget {
-  const AdminItemMenuPage({Key? key}) : super(key: key);
+class UserItemMenuPage extends StatefulWidget {
+  const UserItemMenuPage({Key? key}) : super(key: key);
   @override
   State<StatefulWidget> createState() {
-    return AdminItemMenuState();
+    return UserItemMenuState();
   }
 }
 
-class AdminItemMenuState extends State<AdminItemMenuPage> {
+class UserItemMenuState extends State<UserItemMenuPage> {
   late double _deviceHeight;
   late double _deviceWidth;
 
@@ -43,31 +41,15 @@ class AdminItemMenuState extends State<AdminItemMenuPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            TopBar(
-              'Admin Stock Menu',
-              primaryAction: IconButton(
-                icon: const Icon(Icons.logout_sharp, color: Colors.white),
-                onPressed: () {
-                  Get.back();
-                },
-              ),
-            ),
+            const TopBar('Search and Browse Items'),
             SizedBox(
               height: _deviceHeight * 0.05,
             ),
-            _createItemButton(),
+            _searchItemButton(),
             SizedBox(
               height: _deviceHeight * 0.02,
             ),
-            _viewItemButton(),
-            SizedBox(
-              height: _deviceHeight * 0.02,
-            ),
-            _editItemButton(),
-            SizedBox(
-              height: _deviceHeight * 0.02,
-            ),
-            _deleteItemButton(),
+            _viewCatagoriesButton(),
             SizedBox(
               height: _deviceHeight * 0.02,
             ),
@@ -77,42 +59,20 @@ class AdminItemMenuState extends State<AdminItemMenuPage> {
     );
   }
 
-  Widget _createItemButton() {
+  Widget _searchItemButton() {
     return Builder(builder: (context) {
       return CustomButton(
-          name: "Create an Item",
-          height: _deviceHeight * 0.065,
-          width: _deviceWidth * 0.8,
-          onPressed: () {
-            Get.to(() => const CreateItemPage());
-          });
-    });
-  }
-
-  Widget _viewItemButton() {
-    return Builder(builder: (context) {
-      return CustomButton(
-          name: "View an Item",
+          name: "Search for an Item",
           height: _deviceHeight * 0.065,
           width: _deviceWidth * 0.8,
           onPressed: () {});
     });
   }
 
-  Widget _editItemButton() {
+  Widget _viewCatagoriesButton() {
     return Builder(builder: (context) {
       return CustomButton(
-          name: "Update an Item",
-          height: _deviceHeight * 0.065,
-          width: _deviceWidth * 0.8,
-          onPressed: () {});
-    });
-  }
-
-  Widget _deleteItemButton() {
-    return Builder(builder: (context) {
-      return CustomButton(
-          name: "Delete an Item",
+          name: "View Catagories",
           height: _deviceHeight * 0.065,
           width: _deviceWidth * 0.8,
           onPressed: () {});

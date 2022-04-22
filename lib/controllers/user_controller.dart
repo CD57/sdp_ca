@@ -12,6 +12,7 @@ class UserController extends GetxController {
       FirebaseFirestore.instance.collection('users');
   late User? currentUser = FirebaseAuth.instance.currentUser;
   late UserDetails aUsersDetails;
+  late bool isAdmin;
 
   // Checks if user exists, creates user if not found
   checkUserExists() async {
@@ -94,7 +95,8 @@ class UserController extends GetxController {
       if (kDebugMode) {
         print("checkAdmin() - User found");
       }
-      return UserModel.fromDocument(docSnapShot).isAdmin;
+      isAdmin = UserModel.fromDocument(docSnapShot).isAdmin;
+      return isAdmin;
     }
   }
 }

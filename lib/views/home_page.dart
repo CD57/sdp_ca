@@ -2,10 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sdp_ca/views/items_menu_user_page.dart';
 import 'package:sdp_ca/views/profile_page.dart';
 import '../controllers/index_controller.dart';
 import '../controllers/user_controller.dart';
-import 'admin_items_menu_page.dart';
+import 'items_menu_admin_page.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -63,7 +64,7 @@ class _HomeState extends State<Home> {
   // Displays User Menu
   buildUserMenu() {
     return PageView(children: const <Widget>[
-      Text("USER SEARCH PAGE"),
+      UserItemMenuPage(),
       Text("USER BASKET PAGE"),
       ProfilePage(), // Profile Page
     ], controller: pageController, onPageChanged: onPageChanged);

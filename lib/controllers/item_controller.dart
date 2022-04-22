@@ -7,32 +7,33 @@ class ItemController extends GetxController {
   final CollectionReference<Map<String, dynamic>> itemsRef =
       FirebaseFirestore.instance.collection('items');
 
-  createItem(ItemModel anItem) async {
+  createItem(String title, String manufacturer, String price,
+      String stockLevel) async {
     if (kDebugMode) {
       print("item_controller.dart - createItem()");
     }
-    DocumentSnapshot docSnapShot = await itemsRef.doc(anItem.title).get();
+    DocumentSnapshot docSnapShot = await itemsRef.doc(title).get();
     if (!docSnapShot.exists) {
-      await itemsRef.doc(anItem.title).set({
-        "title": anItem.title,
-        "manufacturer": anItem.manufacturer,
-        "price": anItem.price,
-        "stockLevel": anItem.stockLevel,
+      await itemsRef.doc(title).set({
+        "title": title,
+        "manufacturer": manufacturer,
+        "price": price,
+        "stockLevel": stockLevel,
       });
-      docSnapShot = await itemsRef.doc(anItem.title).get();
+      docSnapShot = await itemsRef.doc(title).get();
       if (kDebugMode) {
-        print("item_controller.dart - New Item Added: " + anItem.title);
+        print("item_controller.dart - New Item Added: " + title);
       }
     } else {
       if (kDebugMode) {
         print("item_controller.dart - Item with same name already exists: " +
-            anItem.title);
+            title);
       }
     }
   }
 
-  getItem(ItemModel anItem) async {
-    DocumentSnapshot docSnapShot = await itemsRef.doc(anItem.title).get();
+  getItem(String anItem) async {
+    DocumentSnapshot docSnapShot = await itemsRef.doc(anItem).get();
     if (!docSnapShot.exists) {
       if (kDebugMode) {
         print("getItem() - Item not found...");
@@ -45,16 +46,17 @@ class ItemController extends GetxController {
     }
   }
 
-  updateItem(ItemModel anItem) async {
-    DocumentSnapshot docSnapShot = await itemsRef.doc(anItem.title).get();
+  updateItem(String itemTitle, ItemModel anItem) async {
+    DocumentSnapshot docSnapShot = await itemsRef.doc(itemTitle).get();
     if (!docSnapShot.exists) {
       if (kDebugMode) {
         print("updateItem() - Item not found...");
       }
     } else {
       if (kDebugMode) {
-        print("updateItem() - Item found");
+        print("updateItem() - Item found: $itemTitle");
       }
+      await itemsRef.doc(itemTitle).delete();
       await itemsRef.doc(anItem.title).set({
         "title": anItem.title,
         "manufacturer": anItem.manufacturer,
@@ -76,10 +78,10 @@ class ItemController extends GetxController {
         print("deleteItem() - Item not found...");
       }
     } else {
-      if (kDebugMode) {
-        print("deleteItem() - Item found");
-      }
       await itemsRef.doc(anItem.title).delete();
+      if (kDebugMode) {
+        print("deleteItem() - Item Deleted");
+      }
       return ItemModel.fromDocument(docSnapShot);
     }
   }

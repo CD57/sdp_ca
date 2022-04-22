@@ -1,10 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sdp_ca/models/user_details_model.dart';
-import 'package:sdp_ca/models/user_model.dart';
-
 import '../controllers/user_controller.dart';
+import '../models/user_details_model.dart';
 import '../widgets/custom_button_widget.dart';
 import '../widgets/user_input_widget.dart';
 
@@ -73,6 +71,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             UserInputForm(
+                initValue: "",
                 onSaved: (_value) {
                   setState(() {
                     _aUser.name = _value;
@@ -85,6 +84,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
               height: _deviceHeight * 0.01,
             ),
             UserInputForm(
+                initValue: "",
                 onSaved: (_value) {
                   setState(() {
                     _aUser.shippingAddress = _value;
@@ -97,6 +97,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
               height: _deviceHeight * 0.01,
             ),
             UserInputForm(
+                initValue: "",
                 onSaved: (_value) {
                   setState(() {
                     _aUser.paymentMethod = _value;
@@ -109,6 +110,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
               height: _deviceHeight * 0.01,
             ),
             UserInputForm(
+                initValue: "",
                 onSaved: (_value) {
                   setState(() {
                     _aUser.phoneNumber = _value;
@@ -138,7 +140,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
           } else {
             if (kDebugMode) {
               print(
-                  "registration_page.dart - _registerButton - onPressed: Error");
+                  "create_user_page.dart - _registerButton - onPressed: Error");
             }
           }
         });
