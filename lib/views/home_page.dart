@@ -16,41 +16,56 @@ class _HomeState extends State<Home> {
   final IndexController indexController = Get.put(IndexController());
   final UserController userController = Get.put(UserController());
   final PageController pageController = PageController();
+  late bool isLoading = true;
+  late bool isAdmin;
 
   @override
-  void initState() {
-    if (kDebugMode) {
-      print("home_page.dart - initState()");
-    }
-    super.initState();
-    userController.checkUserExists();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    checkUser();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(
-        children: const <Widget>[
-          Text("FIRST PAGE"),
-          Text("SECOND PAGE"),
-          ProfilePage(), // Profile Page
-        ],
-        controller: pageController,
-        onPageChanged: onPageChanged, // Updates index for page position
-      ),
+      body: isLoading
+          ? buildLoadingContent()
+          : isAdmin
+              ? buildAdminMenu()
+              : buildUserMenu(),
       bottomNavigationBar: CupertinoTabBar(
           currentIndex: indexController.index.value,
-          onTap: onTap, // Switches Page based on index of item tapped
+          onTap: onTap,
           activeColor: Colors.green,
           items: const [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.inventory_rounded)), // Display Stock?
-            BottomNavigationBarItem(
-                icon: Icon(Icons.search_rounded)), // Search Stock?
-            BottomNavigationBarItem(
-                icon: Icon(Icons.account_circle)), // Profile
+            BottomNavigationBarItem(icon: Icon(Icons.inventory_rounded)),
+            BottomNavigationBarItem(icon: Icon(Icons.search_rounded)),
+            BottomNavigationBarItem(icon: Icon(Icons.account_circle)),
           ]),
     );
+  }
+
+  // Displays content while loadingBool is true
+  buildLoadingContent() {
+    return const Center(child: CircularProgressIndicator());
+  }
+
+  // Displays Admin Menu if isAdmin is true
+  buildAdminMenu() {
+    return PageView(children: const <Widget>[
+      Text("FIRST ADMIN PAGE"),
+      Text("SECOND ADMIN PAGE"),
+      ProfilePage(), // Profile Page
+    ], controller: pageController, onPageChanged: onPageChanged);
+  }
+
+  // Displays User Menu
+  buildUserMenu() {
+    return PageView(children: const <Widget>[
+      Text("FIRST USER PAGE"),
+      Text("SECOND USER PAGE"),
+      ProfilePage(), // Profile Page
+    ], controller: pageController, onPageChanged: onPageChanged);
   }
 
   // Updates index controller
@@ -68,4 +83,23 @@ class _HomeState extends State<Home> {
       curve: Curves.easeInOut,
     );
   }
+
+  void checkUser() async {
+    await userController.checkUserExists();
+    await checkAdmin();
+  }
+
+  // Check if user is an admin, display admin menu if true
+  checkAdmin() async {
+    bool check = await userController.checkAdmin();
+    setState(() {
+      isAdmin = check;
+      isLoading = false;
+      if (kDebugMode) {
+        print("ADMIN: $isAdmin");
+      }
+    });
+  }
+
+  
 }

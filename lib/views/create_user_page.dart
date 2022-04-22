@@ -14,11 +14,11 @@ class CreateUserPage extends StatefulWidget {
 }
 
 class _CreateUserPageState extends State<CreateUserPage> {
-    final UserController userController = Get.put(UserController());
-
+  final UserController userController = Get.put(UserController());
   late double _deviceHeight;
   late double _deviceWidth;
 
+  late String _name;
   late String _shippingAddress;
   late String _paymentMethod;
   late String _phoneNumber;
@@ -78,11 +78,11 @@ class _CreateUserPageState extends State<CreateUserPage> {
             UserInputForm(
                 onSaved: (_value) {
                   setState(() {
-                    _paymentMethod = _value;
+                    _name = _value;
                   });
                 },
                 regex: r'.{3,}',
-                hint: "Payment Method",
+                hint: "Full Name",
                 hidden: false),
             SizedBox(
               height: _deviceHeight * 0.01,
@@ -95,6 +95,18 @@ class _CreateUserPageState extends State<CreateUserPage> {
                 },
                 regex: r'.{3,}',
                 hint: "Shipping Address",
+                hidden: false),
+            SizedBox(
+              height: _deviceHeight * 0.01,
+            ),
+            UserInputForm(
+                onSaved: (_value) {
+                  setState(() {
+                    _paymentMethod = _value;
+                  });
+                },
+                regex: r'.{3,}',
+                hint: "Payment Method",
                 hidden: false),
             SizedBox(
               height: _deviceHeight * 0.01,
@@ -125,7 +137,8 @@ class _CreateUserPageState extends State<CreateUserPage> {
         onPressed: () async {
           if (_inputFormKey.currentState!.validate()) {
             _inputFormKey.currentState!.save();
-            userController.createUserDetails(_shippingAddress, _paymentMethod, _phoneNumber, false);
+            userController.createUserDetails(
+                _name, _shippingAddress, _paymentMethod, _phoneNumber, false);
           } else {
             if (kDebugMode) {
               print(

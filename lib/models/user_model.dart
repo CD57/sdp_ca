@@ -2,14 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserModel {
   final String id;
-  final String name;
   final String email;
+  final bool isAdmin;
   final Timestamp timeCreated;
 
   UserModel({
     required this.id,
-    required this.name,
     required this.email,
+    required this.isAdmin,
     required this.timeCreated,
   });
 
@@ -17,13 +17,13 @@ class UserModel {
     return UserModel(
       id: doc['id'],
       email: doc['email'],
-      name: doc['name'],
+      isAdmin: doc['isAdmin'],
       timeCreated: doc['timeCreated'],
     );
   }
 
   @override
   String toString() {
-    return 'User(id: $id, name: $name, email: $email, timeCreated: $timeCreated)';
+    return 'User(UserID: $id, email: $email, isAdmin: $isAdmin, Time Created: $timeCreated)';
   }
 }
