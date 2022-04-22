@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sdp_ca/views/create_item_page.dart';
 import 'package:sdp_ca/views/display_items_page.dart';
+import 'package:sdp_ca/views/display_users_page.dart';
 import '../widgets/custom_button_widget.dart';
 import '../widgets/top_bar_widget.dart';
 
@@ -56,6 +57,10 @@ class AdminItemMenuState extends State<AdminItemMenuPage> {
             SizedBox(
               height: _deviceHeight * 0.02,
             ),
+            _viewUsersButton(),
+            SizedBox(
+              height: _deviceHeight * 0.02,
+            ),
           ],
         ),
       ),
@@ -82,6 +87,18 @@ class AdminItemMenuState extends State<AdminItemMenuPage> {
           width: _deviceWidth * 0.8,
           onPressed: () {
             Get.to(() => const DisplayItemsPage());
+          });
+    });
+  }
+
+  Widget _viewUsersButton() {
+    return Builder(builder: (context) {
+      return CustomButton(
+          name: "View Users",
+          height: _deviceHeight * 0.065,
+          width: _deviceWidth * 0.8,
+          onPressed: () {
+            Get.to(() => const DisplayUsersPage());
           });
     });
   }
