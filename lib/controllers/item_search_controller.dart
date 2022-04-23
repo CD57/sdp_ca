@@ -10,12 +10,75 @@ import '../widgets/item_list_widget.dart';
 class ItemSearchController extends GetxController {
   final CollectionReference<Map<String, dynamic>> itemsRef =
       FirebaseFirestore.instance.collection('items');
+  late Query<Map<String, dynamic>> searchResultsFuture;
+  late List<ItemListWidget> itemsList = [];
   late String sortByString = "t";
   late bool isLoading = true;
+  late bool isSearching = false;
   late bool sortByTitle = true;
   late bool sortByPrice = false;
   late bool sortByCategory = false;
   late bool sortByManufacturer = false;
+
+  // getSearchResults(String query) {
+  //   Query<Map<String, dynamic>> items = itemsRef.where("title", isEqualTo: query);
+  //   searchResultsFuture = items;
+  //   isSearching = true;
+  // }
+
+  itemList() {
+    itemsList = [];
+    return FutureBuilder<QuerySnapshot>(
+      future: isSearching ? searchResultsFuture.get() : itemsRef.get(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        // Once connection complete
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (kDebugMode) {
+            print("Searching - $isSearching");
+          }
+          // For each doc, use factory to convert doc to ItemModel and add to itemsList
+          for (var doc in (snapshot.data!).docs) {
+            ItemModel anItem = ItemModel.fromDocument(doc);
+            ItemListWidget itemForList = ItemListWidget(anItem);
+            itemsList.add(itemForList);
+          }
+          // Return list, and if empty, return no conent screen
+          if (itemsList.isNotEmpty) {
+            return Flexible(child: ListView(children: sortList(itemsList)));
+          } else {
+            return const Center(
+              child: Text(
+                "No Items Available",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 45.0,
+                ),
+              ),
+            );
+          }
+        }
+        // Until connection complete, return loading screen
+        return Center(
+          child: ListView(
+            shrinkWrap: true,
+            children: const <Widget>[
+              Text(
+                "Loading...",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 40.0,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   List<ItemListWidget> sortList(List<ItemListWidget> itemsList) {
     switch (sortByString) {
@@ -85,63 +148,8 @@ class ItemSearchController extends GetxController {
         }
       default:
         {
-          if (kDebugMode) {
-            print("display_items_page.dart - sortList - Invalid choice");
-          }
           return itemsList;
         }
     }
-  }
-
-  itemList(BuildContext context) {
-    return FutureBuilder<QuerySnapshot>(
-      future: itemsRef.get(),
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          List<ItemListWidget> itemsList = [];
-
-          for (var doc in (snapshot.data!).docs) {
-            ItemModel anItem = ItemModel.fromDocument(doc);
-            if (kDebugMode) {
-              print("Item: " + anItem.toString());
-            }
-            ItemListWidget itemForList = ItemListWidget(anItem);
-            itemsList.add(itemForList);
-          }
-
-          if (itemsList.isEmpty) {
-            return const Center(
-              child: Text(
-                "No Items Available",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 45.0,
-                ),
-              ),
-            );
-          } else {
-            return Flexible(child: ListView(children: sortList(itemsList)));
-          }
-        }
-        return Center(
-          child: ListView(
-            shrinkWrap: true,
-            children: const <Widget>[
-              Text(
-                "Loading...",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 40.0,
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
   }
 }
