@@ -14,7 +14,6 @@ class DisplayUserPage extends StatefulWidget {
 
 class _DisplayUserState extends State<DisplayUserPage> {
   final UserController userController = Get.put(UserController());
-  final UserController itemController = Get.put(UserController());
   late double _deviceHeight;
   late double _deviceWidth;
 

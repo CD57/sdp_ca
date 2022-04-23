@@ -20,6 +20,7 @@ class UserController extends GetxController {
     if (kDebugMode) {
       print("user_controller.dart - checkUserExists()");
     }
+    currentUser = FirebaseAuth.instance.currentUser;
     DocumentSnapshot docSnapShot = await usersRef.doc(currentUser?.email).get();
     DateTime timestamp = DateTime.now();
     if (!docSnapShot.exists) {

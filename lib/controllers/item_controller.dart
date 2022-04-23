@@ -73,6 +73,32 @@ class ItemController extends GetxController {
     }
   }
 
+  updateStock(ItemModel anItem) async {
+    DocumentSnapshot docSnapShot = await itemsRef.doc(anItem.title).get();
+    if (!docSnapShot.exists) {
+      if (kDebugMode) {
+        print("updateStock() - Item not found...");
+      }
+    } else {
+      if (kDebugMode) {
+        print("updateStock() - Item found: " + anItem.title);
+      }
+      await itemsRef.doc(anItem.title).set({
+        "title": anItem.title,
+        "manufacturer": anItem.manufacturer,
+        "price": anItem.price,
+        "stockLevel": anItem.stockLevel,
+        "category": anItem.category,
+      });
+
+      docSnapShot = await itemsRef.doc(anItem.title).get();
+      if (kDebugMode) {
+        print("item_controller.dart - Item Stock Updated: " + ItemModel.fromDocument(docSnapShot).stockLevel);
+      }
+      return ItemModel.fromDocument(docSnapShot);
+    }
+  }
+
   deleteItem(ItemModel anItem) async {
     DocumentSnapshot docSnapShot = await itemsRef.doc(anItem.title).get();
     if (!docSnapShot.exists) {

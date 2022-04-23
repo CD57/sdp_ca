@@ -2,9 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import 'package:sdp_ca/models/item_model.dart';
-
 import '../widgets/item_list_widget.dart';
 
 class ItemSearchController extends GetxController {
@@ -19,12 +17,6 @@ class ItemSearchController extends GetxController {
   late bool sortByPrice = false;
   late bool sortByCategory = false;
   late bool sortByManufacturer = false;
-
-  // getSearchResults(String query) {
-  //   Query<Map<String, dynamic>> items = itemsRef.where("title", isEqualTo: query);
-  //   searchResultsFuture = items;
-  //   isSearching = true;
-  // }
 
   itemList() {
     itemsList = [];
@@ -80,6 +72,7 @@ class ItemSearchController extends GetxController {
     );
   }
 
+  // Sorts list based on chosen button
   List<ItemListWidget> sortList(List<ItemListWidget> itemsList) {
     switch (sortByString) {
       case "t": // Sort By Title

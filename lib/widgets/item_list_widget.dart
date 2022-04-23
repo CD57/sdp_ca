@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:sdp_ca/models/item_model.dart';
 import 'package:sdp_ca/views/display_item_page.dart';
 
+import '../controllers/user_controller.dart';
+
 class ItemListWidget extends StatelessWidget {
   final ItemModel anItem;
   const ItemListWidget(this.anItem, {Key? key}) : super(key: key);
@@ -13,15 +15,14 @@ class ItemListWidget extends StatelessWidget {
     if (kDebugMode) {
       print("item_list_widget.dart - build()");
     }
-    if (kDebugMode) {
-      print("Item: " + anItem.toString());
-    }
+    final UserController userController = Get.put(UserController());
+
     return Container(
       color: Theme.of(context).primaryColor.withOpacity(0.7),
       child: Column(
         children: <Widget>[
           GestureDetector(
-            onTap: () => adminOptions(context),
+            onTap: () => userController.isAdmin ? adminOptions(context) : userOptions(context),
             child: ListTile(
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -50,7 +51,33 @@ class ItemListWidget extends StatelessWidget {
 
   void adminOptions(BuildContext context) {
     if (kDebugMode) {
-      print("item_list_widget.dart - contactOptions");
+      print("item_list_widget.dart - adminOptions");
+    }
+    showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: const Text('Item Options'),
+          actions: [
+            TextButton(
+              onPressed: () => Get.back(),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Get.to(() => DisplayItemPage(anItem: anItem));
+              },
+              child: const Text('View Item'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void userOptions(BuildContext context) {
+    if (kDebugMode) {
+      print("item_list_widget.dart - userOptions");
     }
     showDialog(
       context: context,

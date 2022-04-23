@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sdp_ca/views/items_menu_user_page.dart';
+import 'package:sdp_ca/views/basket_page.dart';
+import 'package:sdp_ca/views/display_items_page.dart';
 import 'package:sdp_ca/views/profile_page.dart';
+import '../controllers/basket_controller.dart';
 import '../controllers/index_controller.dart';
 import '../controllers/user_controller.dart';
 import 'items_menu_admin_page.dart';
@@ -17,6 +19,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final IndexController indexController = Get.put(IndexController());
   final UserController userController = Get.put(UserController());
+  final BasketController basketController = Get.put(BasketController());
   final PageController pageController = PageController();
   late bool isLoading = true;
   late bool isAdmin;
@@ -64,8 +67,8 @@ class _HomeState extends State<Home> {
   // Displays User Menu
   buildUserMenu() {
     return PageView(children: const <Widget>[
-      UserItemMenuPage(),
-      Text("USER BASKET PAGE"),
+      DisplayItemsPage(),
+      BasketPage(),
       ProfilePage(), // Profile Page
     ], controller: pageController, onPageChanged: onPageChanged);
   }

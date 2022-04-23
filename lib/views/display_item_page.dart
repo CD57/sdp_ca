@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sdp_ca/views/update_item_page.dart';
+import '../controllers/basket_controller.dart';
 import '../controllers/item_controller.dart';
 import '../controllers/user_controller.dart';
 import '../models/item_model.dart';
@@ -17,6 +18,7 @@ class DisplayItemPage extends StatefulWidget {
 class _DisplayItemState extends State<DisplayItemPage> {
   final UserController userController = Get.put(UserController());
   final ItemController itemController = Get.put(ItemController());
+  final BasketController basketController = Get.put(BasketController());
   late double _deviceHeight;
   late double _deviceWidth;
 
@@ -184,8 +186,6 @@ class _DisplayItemState extends State<DisplayItemPage> {
   }
 
   addToBasket() {
-    if (kDebugMode) {
-      print("User Profile Message Button Pressed");
-    }
+    basketController.addToBasket(widget.anItem);
   }
 }
