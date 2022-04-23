@@ -23,10 +23,15 @@ class ItemListWidget extends StatelessWidget {
           GestureDetector(
             onTap: () => adminOptions(context),
             child: ListTile(
-              title: Text(
-                anItem.title,
-                style: const TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.bold),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(anItem.title,
+                      style: const TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold)),
+                  Text(" Manufacturer: " + anItem.manufacturer),
+                  Text(" Category: " + anItem.category),
+                ],
               ),
               subtitle: Text(
                 "£" + anItem.price,
