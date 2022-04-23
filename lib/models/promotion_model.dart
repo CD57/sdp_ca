@@ -8,7 +8,7 @@ class PromotionModel {
 
   factory PromotionModel.fromDocument(DocumentSnapshot doc) {
     return PromotionModel(
-      promoID: doc['tipromoIDtle'],
+      promoID: doc['promoID'],
       discount: doc['discount'],
     );
   }

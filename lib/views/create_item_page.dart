@@ -21,6 +21,7 @@ class _CreateItemPageState extends State<CreateItemPage> {
   late String _manufacturer;
   late String _price;
   late String _stockLevel;
+  late String _category;
 
   @override
   Widget build(BuildContext context) {
@@ -133,6 +134,19 @@ class _CreateItemPageState extends State<CreateItemPage> {
             SizedBox(
               height: _deviceHeight * 0.01,
             ),
+            UserInputForm(
+                initValue: "",
+                onSaved: (_value) {
+                  setState(() {
+                    _category = _value;
+                  });
+                },
+                regex: r".{1,}",
+                hint: "Category",
+                hidden: false),
+            SizedBox(
+              height: _deviceHeight * 0.01,
+            ),
           ],
         ),
       ),
@@ -148,7 +162,7 @@ class _CreateItemPageState extends State<CreateItemPage> {
           if (_inputFormKey.currentState!.validate()) {
             _inputFormKey.currentState!.save();
             _itemController.createItem(
-                _title, _manufacturer, _price, _stockLevel);
+                _title, _manufacturer, _price, _stockLevel, _category);
             Get.back();
           } else {
             if (kDebugMode) {

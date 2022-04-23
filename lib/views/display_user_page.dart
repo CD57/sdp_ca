@@ -154,13 +154,13 @@ class _DisplayUserState extends State<DisplayUserPage> {
             ),
             TextButton(
               onPressed: () {
-                //Get.to(() => UpdateUserPage(anUser: widget.anUser));
+                //Get.to(() => UpdateUserPage(aUser: widget.aUser));
               },
               child: const Text('Edit User'),
             ),
             TextButton(
               onPressed: () async {
-                // await itemController.deleteUser(widget.anUser);
+                // await userController.deleteUser(widget.aUser);
                 // Get.back();
                 // Get.back();
                 // Get.back();

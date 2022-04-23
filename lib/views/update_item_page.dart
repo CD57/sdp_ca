@@ -23,6 +23,7 @@ class _UpdateItemPageState extends State<UpdateItemPage> {
   late String _manufacturer = widget.anItem.manufacturer;
   late String _price = widget.anItem.price;
   late String _stockLevel = widget.anItem.stockLevel;
+  late String _category = widget.anItem.category;
 
   @override
   Widget build(BuildContext context) {
@@ -135,6 +136,19 @@ class _UpdateItemPageState extends State<UpdateItemPage> {
             SizedBox(
               height: _deviceHeight * 0.01,
             ),
+            UserInputForm(
+                initValue: widget.anItem.category,
+                onSaved: (_value) {
+                  setState(() {
+                    _category = _value;
+                  });
+                },
+                regex: r".{1,}",
+                hint: "Category: " + widget.anItem.category,
+                hidden: false),
+            SizedBox(
+              height: _deviceHeight * 0.01,
+            ),
           ],
         ),
       ),
@@ -150,10 +164,12 @@ class _UpdateItemPageState extends State<UpdateItemPage> {
           if (_inputFormKey.currentState!.validate()) {
             _inputFormKey.currentState!.save();
             ItemModel updateItem = ItemModel(
-                title: _title,
-                manufacturer: _manufacturer,
-                price: _price,
-                stockLevel: _stockLevel);
+              title: _title,
+              manufacturer: _manufacturer,
+              price: _price,
+              stockLevel: _stockLevel,
+              category: _category,
+            );
             await _itemController.updateItem(widget.anItem.title, updateItem);
             Get.back();
             Get.back();

@@ -7,8 +7,6 @@ import 'package:sdp_ca/widgets/item_list_widget.dart';
 import '../controllers/item_controller.dart';
 import '../widgets/top_bar_widget.dart';
 
-late List<ItemListWidget> itemsWidgetList = [];
-
 class DisplayItemsPage extends StatefulWidget {
   const DisplayItemsPage({Key? key}) : super(key: key);
   @override
@@ -17,9 +15,14 @@ class DisplayItemsPage extends StatefulWidget {
 
 class _DisplayItemsPageState extends State<DisplayItemsPage> {
   final ItemController itemController = Get.put(ItemController());
+  late String sortByString = "n";
   late double _deviceHeight;
   late double _deviceWidth;
   bool isLoading = true;
+  bool sortByTitle = true;
+  bool sortByPrice = false;
+  bool sortByCategory = false;
+  bool sortByManufacturer = false;
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +69,10 @@ class _DisplayItemsPageState extends State<DisplayItemsPage> {
                   },
                 ),
               ),
+              _sortByBar(context),
+              SizedBox(
+                height: _deviceHeight * 0.02,
+              ),
               _itemList(context),
             ],
           ),
@@ -78,14 +85,6 @@ class _DisplayItemsPageState extends State<DisplayItemsPage> {
     return FutureBuilder<QuerySnapshot>(
       future: itemController.itemsRef.get(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.hasError) {
-          return const Text("Something went wrong");
-        }
-
-        if (snapshot.hasData && snapshot.data == null) {
-          return const Text("Document does not exist");
-        }
-
         if (snapshot.connectionState == ConnectionState.done) {
           List<ItemListWidget> itemsList = [];
 
@@ -111,14 +110,9 @@ class _DisplayItemsPageState extends State<DisplayItemsPage> {
               ),
             );
           } else {
-            return Flexible(
-              child: ListView(
-                children: itemsList,
-              ),
-            );
+            return Flexible(child: ListView(children: sortList(itemsList)));
           }
         }
-
         return Center(
           child: ListView(
             shrinkWrap: true,
@@ -137,5 +131,135 @@ class _DisplayItemsPageState extends State<DisplayItemsPage> {
         );
       },
     );
+  }
+
+  _sortByBar(BuildContext context) {
+    MaterialColor isSelected = Colors.blue;
+    MaterialColor notSelected = Colors.grey;
+    return ButtonBar(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        ElevatedButton(
+          child: const Text('Title'),
+          style: ElevatedButton.styleFrom(
+              primary: sortByString.contains("t") ? isSelected : notSelected),
+          onPressed: () {
+            setState(() {
+              sortByString = "t";
+              sortByTitle = !sortByTitle;
+            });
+          },
+        ),
+        ElevatedButton(
+          child: const Text('Price'),
+          style: ElevatedButton.styleFrom(
+              primary: sortByString.contains("p") ? isSelected : notSelected),
+          onPressed: () {
+            setState(() {
+              sortByString = "p";
+              sortByPrice = !sortByPrice;
+            });
+          },
+        ),
+        ElevatedButton(
+          child: const Text('Manufacturer'),
+          style: ElevatedButton.styleFrom(
+              primary: sortByString.contains("m") ? isSelected : notSelected),
+          onPressed: () {
+            setState(() {
+              sortByString = "m";
+              sortByManufacturer = !sortByManufacturer;
+            });
+          },
+        ),
+        ElevatedButton(
+          child: const Text('Category'),
+          style: ElevatedButton.styleFrom(
+              primary: sortByString.contains("c") ? isSelected : notSelected),
+          onPressed: () {
+            setState(() {
+              sortByString = "c";
+              sortByCategory = !sortByCategory;
+            });
+          },
+        ),
+      ],
+    );
+  }
+
+  List<ItemListWidget> sortList(List<ItemListWidget> itemsList) {
+    switch (sortByString) {
+      case "t": // Sort By Title
+        {
+          if (sortByTitle) {
+            itemsList.sort((item1, item2) {
+              return Comparable.compare(
+                  item1.anItem.title, item2.anItem.title); // Normal
+            });
+            return itemsList;
+          } else {
+            itemsList.sort((item1, item2) {
+              return Comparable.compare(
+                  item2.anItem.title, item1.anItem.title); // Reversed
+            });
+            return itemsList;
+          }
+        }
+      case "p": // Sort By Price
+        {
+          if (sortByPrice) {
+            itemsList.sort((item1, item2) {
+              return Comparable.compare(
+                  item1.anItem.price, item2.anItem.price); // Normal
+            });
+            return itemsList;
+          } else {
+            itemsList.sort((item1, item2) {
+              return Comparable.compare(
+                  item2.anItem.price, item1.anItem.price); // Reversed
+            });
+            return itemsList;
+          }
+        }
+      case "m": // Sort By Manufacturer
+        {
+          if (sortByManufacturer) {
+            itemsList.sort((item1, item2) {
+              return Comparable.compare(item1.anItem.manufacturer,
+                  item2.anItem.manufacturer); // Normal
+            });
+            return itemsList;
+          } else {
+            itemsList.sort((item1, item2) {
+              return Comparable.compare(item2.anItem.manufacturer,
+                  item1.anItem.manufacturer); // Reversed
+            });
+            return itemsList;
+          }
+        }
+      case "c": // Sort By category
+        {
+          if (sortByCategory) {
+            itemsList.sort((item1, item2) {
+              return Comparable.compare(
+                  item1.anItem.category, item2.anItem.category); // Normal
+            });
+            return itemsList;
+          } else {
+            itemsList.sort((item1, item2) {
+              return Comparable.compare(
+                  item2.anItem.category, item1.anItem.category); // Reversed
+            });
+            return itemsList;
+          }
+        }
+      default:
+        {
+          if (kDebugMode) {
+            print("display_items_page.dart - sortList - Invalid choice");
+          }
+          return itemsList;
+        }
+    }
   }
 }

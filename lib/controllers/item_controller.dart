@@ -7,8 +7,8 @@ class ItemController extends GetxController {
   final CollectionReference<Map<String, dynamic>> itemsRef =
       FirebaseFirestore.instance.collection('items');
 
-  createItem(String title, String manufacturer, String price,
-      String stockLevel) async {
+  createItem(String title, String manufacturer, String price, String stockLevel,
+      String category) async {
     if (kDebugMode) {
       print("item_controller.dart - createItem()");
     }
@@ -19,6 +19,7 @@ class ItemController extends GetxController {
         "manufacturer": manufacturer,
         "price": price,
         "stockLevel": stockLevel,
+        "category": category,
       });
       docSnapShot = await itemsRef.doc(title).get();
       if (kDebugMode) {
@@ -62,6 +63,7 @@ class ItemController extends GetxController {
         "manufacturer": anItem.manufacturer,
         "price": anItem.price,
         "stockLevel": anItem.stockLevel,
+        "category": anItem.category,
       });
       docSnapShot = await itemsRef.doc(anItem.title).get();
       if (kDebugMode) {
