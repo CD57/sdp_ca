@@ -1,32 +1,30 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controllers/item_controller.dart';
+import 'package:sdp_ca/controllers/promo_controller.dart';
 import '../widgets/custom_button_widget.dart';
 import '../widgets/top_bar_widget.dart';
 import '../widgets/user_input_widget.dart';
 
-class CreateItemPage extends StatefulWidget {
-  const CreateItemPage({Key? key}) : super(key: key);
+class PromoCodePage extends StatefulWidget {
+  const PromoCodePage({Key? key}) : super(key: key);
   @override
-  State<CreateItemPage> createState() => _CreateItemPageState();
+  State<PromoCodePage> createState() => _PromoCodePageState();
 }
 
-class _CreateItemPageState extends State<CreateItemPage> {
-  final ItemController _itemController = Get.put(ItemController());
+class _PromoCodePageState extends State<PromoCodePage> {
+  final PromoController _promoController = Get.put(PromoController());
   final _inputFormKey = GlobalKey<FormState>();
   late double _deviceHeight;
   late double _deviceWidth;
-  late String _title;
-  late String _manufacturer;
-  late String _price;
-  late String _stockLevel;
-  late String _category;
+  late String _promoCode;
+  late String _promoDiscount;
+
 
   @override
   Widget build(BuildContext context) {
     if (kDebugMode) {
-      print("create_item_page.dart - build()");
+      print("promo_code_page.dart - build()");
     }
     _deviceHeight = MediaQuery.of(context).size.height;
     _deviceWidth = MediaQuery.of(context).size.width;
@@ -49,7 +47,7 @@ class _CreateItemPageState extends State<CreateItemPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             TopBar(
-              'Create an Item',
+              'Create a Promo Code',
               primaryAction: IconButton(
                 icon: const Icon(Icons.keyboard_return_rounded,
                     color: Colors.white),
@@ -58,7 +56,7 @@ class _CreateItemPageState extends State<CreateItemPage> {
                 },
               ),
             ),
-            _itemDetailsForm(),
+            _promoCodeForm(),
             SizedBox(
               height: _deviceHeight * 0.1,
             ),
@@ -72,7 +70,7 @@ class _CreateItemPageState extends State<CreateItemPage> {
     );
   }
 
-  Widget _itemDetailsForm() {
+  Widget _promoCodeForm() {
     return SizedBox(
       height: _deviceHeight * 0.50,
       child: Form(
@@ -86,11 +84,11 @@ class _CreateItemPageState extends State<CreateItemPage> {
                 initValue: "",
                 onSaved: (_value) {
                   setState(() {
-                    _title = _value;
+                    _promoCode = _value;
                   });
                 },
-                regex: r'.{3,}',
-                hint: "Unique Item Title",
+                regex: r'.{6,}',
+                hint: "Promo Code",
                 hidden: false),
             SizedBox(
               height: _deviceHeight * 0.01,
@@ -99,50 +97,11 @@ class _CreateItemPageState extends State<CreateItemPage> {
                 initValue: "",
                 onSaved: (_value) {
                   setState(() {
-                    _manufacturer = _value;
-                  });
-                },
-                regex: r'.{3,}',
-                hint: "Manufacturer",
-                hidden: false),
-            SizedBox(
-              height: _deviceHeight * 0.01,
-            ),
-            UserInputForm(
-                initValue: "",
-                onSaved: (_value) {
-                  setState(() {
-                    _price = _value;
+                    _promoDiscount = _value;
                   });
                 },
                 regex: r'.{1,}',
-                hint: "Price",
-                hidden: false),
-            SizedBox(
-              height: _deviceHeight * 0.01,
-            ),
-            UserInputForm(
-                initValue: "",
-                onSaved: (_value) {
-                  setState(() {
-                    _stockLevel = _value;
-                  });
-                },
-                regex: r".{1,}",
-                hint: "Stock Level",
-                hidden: false),
-            SizedBox(
-              height: _deviceHeight * 0.01,
-            ),
-            UserInputForm(
-                initValue: "",
-                onSaved: (_value) {
-                  setState(() {
-                    _category = _value;
-                  });
-                },
-                regex: r".{1,}",
-                hint: "Category",
+                hint: "Percent Discount",
                 hidden: false),
             SizedBox(
               height: _deviceHeight * 0.01,
@@ -152,22 +111,22 @@ class _CreateItemPageState extends State<CreateItemPage> {
       ),
     );
   }
- 
+
   Widget _customButton() {
     return CustomButton(
-        name: "Add Item to Stock",
+        name: "Add Promotional Code",
         height: _deviceHeight * 0.065,
         width: _deviceWidth * 0.65,
         onPressed: () {
           if (_inputFormKey.currentState!.validate()) {
             _inputFormKey.currentState!.save();
-            _itemController.createItem(
-                _title, _manufacturer, _price, _stockLevel, _category);
+            _promoController.createPromo(
+                _promoCode, _promoDiscount);
             Get.back();
           } else {
             if (kDebugMode) {
               print(
-                  "Create_item_page.dart - _registerButton - onPressed: Error");
+                  "promo_code_page.dart - _customButton - _inputFormKey invalid");
             }
           }
         });

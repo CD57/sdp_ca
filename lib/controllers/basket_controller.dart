@@ -5,14 +5,17 @@ import 'package:sdp_ca/controllers/item_controller.dart';
 import 'package:sdp_ca/models/item_model.dart';
 
 import '../widgets/item_list_widget.dart';
+import 'promo_controller.dart';
 
 class BasketController extends GetxController {
   final ItemController itemController = Get.put(ItemController());
+  final PromoController promoController = Get.put(PromoController());
   late List<ItemListWidget> basketListWidget = [];
   late List<ItemModel> itemBasket = [];
   late String promotionID = "";
   late double totalPrice = 0.0;
   late int itemAmount = 0;
+  late bool promoApplied = false;
 
   purchaseBasket() {
     for (var item in itemBasket) {
@@ -28,6 +31,21 @@ class BasketController extends GetxController {
     totalPrice = 0.0;
     itemAmount = 0;
     itemBasket = [];
+  }
+
+  applyPromoCode(String code) {
+    String promoOffer = promoController.checkPromo(code);
+    double tempTotal = totalPrice;
+    if (promoOffer == "Invalid") {
+      return "Invalid Promo Code";
+    } else {
+      totalPrice = totalPrice - double.parse(promoOffer);
+      if (kDebugMode) {
+        print("$promoOffer discounted, old total $tempTotal, new total $totalPrice");
+      
+      }return "$promoOffer discounted, old total $tempTotal, new total $totalPrice";
+    }
+
   }
 
   addToBasket(ItemModel anItem) {

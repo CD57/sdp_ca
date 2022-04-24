@@ -1,9 +1,9 @@
-import 'dart:html';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sdp_ca/controllers/basket_controller.dart';
+import 'package:sdp_ca/controllers/promo_controller.dart';
+import 'package:sdp_ca/widgets/user_input_widget.dart';
 import '../controllers/item_controller.dart';
 
 class BasketPage extends StatefulWidget {
@@ -29,6 +29,7 @@ class _BasketPageState extends State<BasketPage> {
   }
 
   Widget _buildBasket() {
+    late String _promoResult = "Enter A Promo Code";
     return Material(child: Builder(
       builder: (BuildContext _context) {
         return Container(
@@ -43,9 +44,61 @@ class _BasketPageState extends State<BasketPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               basketController.basketList(),
-              ElevatedButton(onPressed: () {
-                basketController.purchaseBasket();
-              }, child: const Text("CheckOut"))
+              ElevatedButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (_) {
+                        final _inputFormKey = GlobalKey<FormState>();
+                        return AlertDialog(
+                          title: const Text('Enter Promo Code'),
+                          actions: [
+                            Form(
+                              key: _inputFormKey,
+                              child: UserInputForm(
+                                  initValue: "",
+                                  onSaved: (_value) {
+                                    setState(() {
+                                      _promoResult = _value;
+                                    });
+                                  },
+                                  regex: r'.{1,}',
+                                  hint: "Promo Code",
+                                  hidden: false),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                if (_inputFormKey.currentState!.validate()) {
+                                  _inputFormKey.currentState!.save();
+                                  _promoResult = basketController
+                                      .applyPromoCode(_promoResult);
+                                  Get.back();
+                                }
+                              },
+                              child: const Text('Submit'),
+                            ),
+                            TextButton(
+                              onPressed: () => Get.back(),
+                              child: const Text('Cancel'),
+                            )
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  child: Text(_promoResult)),
+              SizedBox(
+                height: _deviceHeight * 0.01,
+              ),
+              Text("TOTAL PRICE: " + basketController.totalPrice.toString()),
+              SizedBox(
+                height: _deviceHeight * 0.01,
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    basketController.purchaseBasket();
+                  },
+                  child: const Text("CheckOut"))
             ],
           ),
         );
