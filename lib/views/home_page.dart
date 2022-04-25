@@ -99,6 +99,9 @@ class _HomeState extends State<Home> {
   // Check if user is an admin, display admin menu if true
   checkIfAdmin() async {
     bool check = await userController.checkAdmin();
+    if (check && userController.userState.state.toString() == "user") {
+      userController.userState.touch();
+    }
     setState(() {
       isAdmin = check;
       isLoading = false;

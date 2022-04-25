@@ -111,7 +111,7 @@ class _DisplayItemState extends State<DisplayItemPage> {
   }
 
   itemButton() {
-    if (userController.isAdmin) {
+    if (userController.userState.state.toString() == "admin") {
       return buildButton(
           text: "Admin Item Options", function: adminItemOptions);
     } else {

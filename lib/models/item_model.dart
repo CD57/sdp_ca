@@ -24,16 +24,6 @@ class ItemModel {
     );
   }
 
-  factory ItemModel.fromJSON(Map<String, dynamic> _json) {
-    return ItemModel(
-      title: _json["title"],
-      manufacturer: _json["manufacturer"],
-      price: _json["price"],
-      stockLevel: _json["stockLevel"],
-      category: _json["category"],
-    );
-  }
-
   @override
   String toString() {
     return 'ItemModel(title: $title, manufacturer: $manufacturer, price: $price, stockLevel: $stockLevel, category: $category)';

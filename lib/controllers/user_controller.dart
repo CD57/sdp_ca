@@ -12,6 +12,7 @@ class UserController extends GetxController {
       FirebaseFirestore.instance.collection('users');
   late User? currentUser = FirebaseAuth.instance.currentUser;
   late bool isAdmin;
+  var userState = Stateful(IsUser());
 
   // Checks if user exists, creates user if not found
   checkUserExists() async {
@@ -113,5 +114,54 @@ class UserController extends GetxController {
       isAdmin = UserModel.fromDocument(docSnapShot).isAdmin;
       return isAdmin;
     }
+  }
+}
+
+abstract class UserState {
+  void handler(Stateful context);
+  @override
+  String toString();
+}
+
+class IsAdmin implements UserState {
+  @override
+  handler(Stateful context) {
+    if (kDebugMode) {
+      print("  Handler of StatusOn is being called!");
+    }
+    context.state = IsUser();
+  }
+
+  @override
+  String toString() {
+    return "admin";
+  }
+}
+
+class IsUser implements UserState {
+  @override
+  handler(Stateful context) {
+    if (kDebugMode) {
+      print("  Handler of StatusOff is being called!");
+    }
+    context.state = IsAdmin();
+  }
+
+  @override
+  String toString() {
+    return "user";
+  }
+}
+
+class Stateful {
+  UserState _state;
+
+  Stateful(this._state);
+
+  UserState get state => _state;
+  set state(UserState newState) => _state = newState;
+
+  void touch() {
+    _state.handler(this);
   }
 }

@@ -98,11 +98,11 @@ class _DisplayUserState extends State<DisplayUserPage> {
   }
 
   itemButton() {
-    if (userController.isAdmin) {
+    if (userController.userState.state.toString() == "admin") {
       return buildButton(
           text: "Admin User Options", function: adminUserOptions);
     } else {
-      return buildButton(text: "Add to Basket", function: addToBasket);
+      return buildButton(text: "You Shouldn't be here", function: UserButton);
     }
   }
 
@@ -166,7 +166,7 @@ class _DisplayUserState extends State<DisplayUserPage> {
     );
   }
 
-  addToBasket() {
+  UserButton() {
     if (kDebugMode) {
       print("User Profile Message Button Pressed");
     }
