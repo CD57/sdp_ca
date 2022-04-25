@@ -101,7 +101,7 @@ class _PromoCodePageState extends State<PromoCodePage> {
                   });
                 },
                 regex: r'.{1,}',
-                hint: "Percent Discount",
+                hint: "Amount Off (in euro)",
                 hidden: false),
             SizedBox(
               height: _deviceHeight * 0.01,

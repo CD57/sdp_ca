@@ -3,7 +3,10 @@ import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sdp_ca/models/promotion_model.dart';
 
+import 'basket_controller.dart';
+
 class PromoController extends GetxController {
+  late bool promoApplied = false;
   late String promotionID = "";
 
   final CollectionReference<Map<String, dynamic>> promoRef =
@@ -31,17 +34,23 @@ class PromoController extends GetxController {
     }
   }
 
-  checkPromo(String code) async {
+  Future<String> checkPromo(String code) async {
     if (kDebugMode) {
       print("promo_controller.dart - checkPromo()");
     }
-    DocumentSnapshot docSnapShot = await promoRef.doc(code).get();
-    if (!docSnapShot.exists) {
+    DocumentSnapshot docSnapShot;
+    docSnapShot = await promoRef.doc(code).get();
+    if (kDebugMode) {
+      print(docSnapShot.id);
+    }
+    if (docSnapShot.exists) {
       PromotionModel promo = PromotionModel.fromDocument(docSnapShot);
       if (kDebugMode) {
-        print("promo_controller.dart - Promo Code Valid: " + code);
+        print("promo_controller.dart - Promo Code Valid: " + promo.promoCode);
       }
-      return promo.discount;
+      final BasketController basketController = Get.put(BasketController());
+      basketController.promoApplied = true;
+      return promo.promoDiscount;
     } else {
       if (kDebugMode) {
         print("promo_controller.dart - Promo Code Not Found: " + code);

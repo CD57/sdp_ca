@@ -2,24 +2,32 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sdp_ca/controllers/item_controller.dart';
+import 'package:sdp_ca/controllers/user_controller.dart';
 import 'package:sdp_ca/models/item_model.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../widgets/item_list_widget.dart';
 import 'promo_controller.dart';
 
 class BasketController extends GetxController {
+  final CollectionReference<Map<String, dynamic>> receiptsRef =
+      FirebaseFirestore.instance.collection('receipts');
+  final CollectionReference<Map<String, dynamic>> reviewsRef =
+      FirebaseFirestore.instance.collection('reviews');
+
+  final UserController userController = Get.put(UserController());
   final ItemController itemController = Get.put(ItemController());
   final PromoController promoController = Get.put(PromoController());
   late List<ItemListWidget> basketListWidget = [];
   late List<ItemModel> itemBasket = [];
+  late List<String> receiptsList = [];
   late String promotionID = "";
   late double totalPrice = 0.0;
   late int itemAmount = 0;
   late bool promoApplied = false;
 
-  purchaseBasket() {
+  purchaseBasket() async {
     for (var item in itemBasket) {
-      item.stockLevel = (int.parse((item.stockLevel))-1).toString();
+      item.stockLevel = (int.parse((item.stockLevel)) - 1).toString();
       itemController.updateStock(item);
       if (kDebugMode) {
         print("Item Bought: " + item.title);
@@ -28,24 +36,38 @@ class BasketController extends GetxController {
     if (kDebugMode) {
       print("Total Purchase: $totalPrice for $itemAmount items...");
     }
+    await createRecepit(itemBasket);
+    promoApplied = false;
     totalPrice = 0.0;
     itemAmount = 0;
     itemBasket = [];
   }
 
-  applyPromoCode(String code) {
-    String promoOffer = promoController.checkPromo(code);
+  applyPromoCode(String code) async {
+    if (promoApplied) {
+      if (kDebugMode) {
+        print("applyPromoCode - Already Applied");
+      }
+      return "Already Promo Code Applied";
+    }
+    String promoOffer = await promoController.checkPromo(code);
     double tempTotal = totalPrice;
     if (promoOffer == "Invalid") {
+      if (kDebugMode) {
+        print("applyPromoCode - Invalid");
+      }
       return "Invalid Promo Code";
     } else {
+      if (kDebugMode) {
+        print("applyPromoCode - Valid");
+      }
       totalPrice = totalPrice - double.parse(promoOffer);
       if (kDebugMode) {
-        print("$promoOffer discounted, old total $tempTotal, new total $totalPrice");
-      
-      }return "$promoOffer discounted, old total $tempTotal, new total $totalPrice";
+        print(
+            "$promoOffer discounted, old total $tempTotal, new total $totalPrice");
+      }
+      return "$promoOffer discounted, old total $tempTotal, new total $totalPrice";
     }
-
   }
 
   addToBasket(ItemModel anItem) {
@@ -80,6 +102,51 @@ class BasketController extends GetxController {
           ),
         ),
       );
+    }
+  }
+
+  createRecepit(List<ItemModel> itemBasket) async {
+    String timeReference = DateTime.now().toString();
+    DocumentSnapshot docSnapShot = await receiptsRef.doc(timeReference).get();
+    if (!docSnapShot.exists) {
+      for (var x in itemBasket) {
+        receiptsList.add(x.title);
+      }
+      await receiptsRef.doc(timeReference).set({
+        "itemsBought": receiptsList,
+        "totalPrice": totalPrice,
+        "timeOfPurchase": timeReference,
+      });
+      docSnapShot = await receiptsRef.doc(timeReference).get();
+      if (kDebugMode) {
+        print("promo_controller.dart - New Recepit Added: " + timeReference);
+      }
+    } else {
+      if (kDebugMode) {
+        print("promo_controller.dart - Promo with same code already exists: " +
+            timeReference);
+      }
+    }
+  }
+
+  createReview(String review) async {
+    String timeReference = DateTime.now().toString();
+    String email = userController.currentUser!.email!;
+
+    DocumentSnapshot docSnapShot = await reviewsRef.doc(timeReference).get();
+    if (!docSnapShot.exists) {
+      reviewsRef.doc(timeReference).set({
+        "user": email,
+        "review": review,
+      });
+      if (kDebugMode) {
+        print("promo_controller.dart - New Review Added: " + timeReference);
+      }
+    } else {
+      if (kDebugMode) {
+        print(
+            "promo_controller.dart - Review already exists: " + timeReference);
+      }
     }
   }
 }

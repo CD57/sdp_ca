@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sdp_ca/controllers/basket_controller.dart';
-import 'package:sdp_ca/controllers/promo_controller.dart';
 import 'package:sdp_ca/widgets/user_input_widget.dart';
 import '../controllers/item_controller.dart';
 
@@ -30,6 +29,7 @@ class _BasketPageState extends State<BasketPage> {
 
   Widget _buildBasket() {
     late String _promoResult = "Enter A Promo Code";
+    late String _review = "No Review";
     return Material(child: Builder(
       builder: (BuildContext _context) {
         return Container(
@@ -67,13 +67,14 @@ class _BasketPageState extends State<BasketPage> {
                                   hidden: false),
                             ),
                             TextButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 if (_inputFormKey.currentState!.validate()) {
                                   _inputFormKey.currentState!.save();
-                                  _promoResult = basketController
+                                  await basketController
                                       .applyPromoCode(_promoResult);
                                   Get.back();
                                 }
+                                setState(() {});
                               },
                               child: const Text('Submit'),
                             ),
@@ -95,8 +96,49 @@ class _BasketPageState extends State<BasketPage> {
                 height: _deviceHeight * 0.01,
               ),
               ElevatedButton(
-                  onPressed: () {
-                    basketController.purchaseBasket();
+                  onPressed: () async {
+                    await basketController.purchaseBasket();
+                    setState(() {});
+                    showDialog(
+                      context: context,
+                      builder: (_) {
+                        final _inputFormKey2 = GlobalKey<FormState>();
+                        return AlertDialog(
+                          title: const Text('Leave a review?'),
+                          actions: [
+                            Form(
+                              key: _inputFormKey2,
+                              child: UserInputForm(
+                                  initValue: "",
+                                  onSaved: (_value) {
+                                    setState(() {
+                                      _review = _value;
+                                    });
+                                  },
+                                  regex: r'.{1,}',
+                                  hint: "Review",
+                                  hidden: false),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                if (_inputFormKey2.currentState!.validate()) {
+                                  _inputFormKey2.currentState!.save();
+                                  await basketController
+                                      .createReview(_review);
+                                  Get.back();
+                                }
+                                setState(() {});
+                              },
+                              child: const Text('Submit'),
+                            ),
+                            TextButton(
+                              onPressed: () => Get.back(),
+                              child: const Text('No Thanks'),
+                            )
+                          ],
+                        );
+                      },
+                    );
                   },
                   child: const Text("CheckOut"))
             ],

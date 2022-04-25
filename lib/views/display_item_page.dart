@@ -127,6 +127,7 @@ class _DisplayItemState extends State<DisplayItemPage> {
       ),
       onPressed: () {
         Get.back();
+        Get.back();
       },
     );
   }

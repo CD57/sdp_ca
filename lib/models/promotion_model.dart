@@ -1,18 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PromotionModel {
-  late String promoID = "";
-  late String discount = "";
+  late String promoCode;
+  late String promoDiscount;
 
-  PromotionModel({promoID, discount});
+  PromotionModel({required this.promoCode, required this.promoDiscount});
 
   factory PromotionModel.fromDocument(DocumentSnapshot doc) {
     return PromotionModel(
-      promoID: doc['promoID'],
-      discount: doc['discount'],
+      promoCode: doc['promoCode'],
+      promoDiscount: doc['promoDiscount'],
     );
   }
 
   @override
-  String toString() => 'PromotionModel(promoID: $promoID, discount: $discount)';
+  String toString() => 'PromotionModel(promoCode: $promoCode, discount: $promoDiscount)';
 }

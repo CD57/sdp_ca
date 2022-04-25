@@ -2,13 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sdp_ca/views/admin_users_menu_page.dart';
 import 'package:sdp_ca/views/basket_page.dart';
 import 'package:sdp_ca/views/display_items_page.dart';
 import 'package:sdp_ca/views/profile_page.dart';
 import '../controllers/basket_controller.dart';
 import '../controllers/index_controller.dart';
 import '../controllers/user_controller.dart';
-import 'items_menu_admin_page.dart';
+import 'admin_items_menu_page.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -59,7 +60,7 @@ class _HomeState extends State<Home> {
   buildAdminMenu() {
     return PageView(children: const <Widget>[
       AdminItemMenuPage(),
-      Text("ADMIN STOCK PAGE"),
+      AdminUserMenuPage(),
       ProfilePage(), // Profile Page
     ], controller: pageController, onPageChanged: onPageChanged);
   }
@@ -92,17 +93,17 @@ class _HomeState extends State<Home> {
   // Check details regarding current user
   void checkUser() async {
     await userController.checkUserExists();
-    await checkAdmin();
+    await checkIfAdmin();
   }
 
   // Check if user is an admin, display admin menu if true
-  checkAdmin() async {
+  checkIfAdmin() async {
     bool check = await userController.checkAdmin();
     setState(() {
       isAdmin = check;
       isLoading = false;
       if (kDebugMode) {
-        print("ADMIN: $isAdmin");
+        print("IS ADMIN: $isAdmin");
       }
     });
   }

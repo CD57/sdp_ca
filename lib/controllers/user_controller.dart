@@ -67,11 +67,6 @@ class UserController extends GetxController {
         "paymentMethod": aUsersDetails.paymentMethod,
         "phoneNumber": aUsersDetails.phoneNumber,
       });
-      docSnapShot = await usersRef
-          .doc(currentUser?.uid)
-          .collection("UserDetails")
-          .doc(currentUser?.uid)
-          .get();
       if (kDebugMode) {
         print("user_controller.dart - New User Details Added: " +
             currentUser!.email!);
@@ -82,6 +77,26 @@ class UserController extends GetxController {
       if (kDebugMode) {
         print("user_controller.dart - User Details Already Exist");
       }
+    }
+  }
+
+  // Checks if user details exists, deletes user details if not found
+  deleteUser(UserModel _aUser) async {
+    if (kDebugMode) {
+      print("user_controller.dart - deleteUser()");
+    }
+    DocumentSnapshot docSnapShot = await usersRef.doc(_aUser.email).get();
+    if (!docSnapShot.exists) {
+      if (kDebugMode) {
+        print("deleteUser() - User not found");
+      }
+      return "Not Found";
+    } else {
+      if (kDebugMode) {
+        print("deleteUser() - Deleting User");
+      }
+      await usersRef.doc(_aUser.email).delete();
+      return "Deleted";
     }
   }
 

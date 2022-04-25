@@ -1,17 +1,22 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:sdp_ca/views/create_item_page.dart';
+import 'package:sdp_ca/views/display_items_page.dart';
+import 'package:sdp_ca/views/display_users_page.dart';
+import 'package:sdp_ca/views/promo_code_page.dart';
 import '../widgets/custom_button_widget.dart';
 import '../widgets/top_bar_widget.dart';
 
-class UserItemMenuPage extends StatefulWidget {
-  const UserItemMenuPage({Key? key}) : super(key: key);
+class AdminItemMenuPage extends StatefulWidget {
+  const AdminItemMenuPage({Key? key}) : super(key: key);
   @override
   State<StatefulWidget> createState() {
-    return UserItemMenuState();
+    return AdminItemMenuState();
   }
 }
 
-class UserItemMenuState extends State<UserItemMenuPage> {
+class AdminItemMenuState extends State<AdminItemMenuPage> {
   late double _deviceHeight;
   late double _deviceWidth;
 
@@ -41,41 +46,45 @@ class UserItemMenuState extends State<UserItemMenuPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const TopBar('Search and Browse Items'),
+            const TopBar('Admin Menu - Stock Options'),
             SizedBox(
               height: _deviceHeight * 0.05,
             ),
-            _searchItemButton(),
+            _createItemButton(),
             SizedBox(
               height: _deviceHeight * 0.02,
             ),
-            _viewCatagoriesButton(),
+            _viewItemsButton(),
             SizedBox(
               height: _deviceHeight * 0.02,
-            ),
+            )
           ],
         ),
       ),
     );
   }
 
-  Widget _searchItemButton() {
+  Widget _createItemButton() {
     return Builder(builder: (context) {
       return CustomButton(
-          name: "Search for an Item",
+          name: "Create an Item",
           height: _deviceHeight * 0.065,
           width: _deviceWidth * 0.8,
-          onPressed: () {});
+          onPressed: () {
+            Get.to(() => const CreateItemPage());
+          });
     });
   }
 
-  Widget _viewCatagoriesButton() {
+  Widget _viewItemsButton() {
     return Builder(builder: (context) {
       return CustomButton(
-          name: "View Catagories",
+          name: "View Items",
           height: _deviceHeight * 0.065,
           width: _deviceWidth * 0.8,
-          onPressed: () {});
+          onPressed: () {
+            Get.to(() => const DisplayItemsPage());
+          });
     });
   }
 }
