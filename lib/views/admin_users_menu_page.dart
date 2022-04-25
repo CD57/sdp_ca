@@ -1,8 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sdp_ca/views/create_item_page.dart';
-import 'package:sdp_ca/views/display_items_page.dart';
 import 'package:sdp_ca/views/display_users_page.dart';
 import 'package:sdp_ca/views/promo_code_page.dart';
 import '../widgets/custom_button_widget.dart';

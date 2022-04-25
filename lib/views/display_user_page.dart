@@ -102,7 +102,7 @@ class _DisplayUserState extends State<DisplayUserPage> {
       return buildButton(
           text: "Admin User Options", function: adminUserOptions);
     } else {
-      return buildButton(text: "You Shouldn't be here", function: UserButton);
+      return buildButton(text: "You Shouldn't be here", function: userButton);
     }
   }
 
@@ -166,7 +166,7 @@ class _DisplayUserState extends State<DisplayUserPage> {
     );
   }
 
-  UserButton() {
+  userButton() {
     if (kDebugMode) {
       print("User Profile Message Button Pressed");
     }
