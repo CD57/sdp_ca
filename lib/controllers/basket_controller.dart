@@ -9,6 +9,8 @@ import '../widgets/item_list_widget.dart';
 import 'promo_controller.dart';
 
 class BasketController extends GetxController {
+  final CollectionReference<Map<String, dynamic>> usersRef =
+      FirebaseFirestore.instance.collection('users');
   final CollectionReference<Map<String, dynamic>> receiptsRef =
       FirebaseFirestore.instance.collection('receipts');
   final CollectionReference<Map<String, dynamic>> reviewsRef =
@@ -107,17 +109,29 @@ class BasketController extends GetxController {
 
   createRecepit(List<ItemModel> itemBasket) async {
     String timeReference = DateTime.now().toString();
-    DocumentSnapshot docSnapShot = await receiptsRef.doc(timeReference).get();
+    DocumentSnapshot docSnapShot = await usersRef
+        .doc(userController.currentUser!.email!)
+        .collection("receipts")
+        .doc(timeReference)
+        .get();
     if (!docSnapShot.exists) {
       for (var x in itemBasket) {
         receiptsList.add(x.title);
       }
-      await receiptsRef.doc(timeReference).set({
+      await usersRef
+          .doc(userController.currentUser!.email!)
+          .collection("receipts")
+          .doc(timeReference)
+          .set({
         "itemsBought": receiptsList,
         "totalPrice": totalPrice,
         "timeOfPurchase": timeReference,
       });
-      docSnapShot = await receiptsRef.doc(timeReference).get();
+      docSnapShot = await usersRef
+          .doc(userController.currentUser!.email!)
+          .collection("receipts")
+          .doc(timeReference)
+          .get();
       if (kDebugMode) {
         print("promo_controller.dart - New Recepit Added: " + timeReference);
       }

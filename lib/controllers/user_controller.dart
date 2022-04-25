@@ -11,7 +11,6 @@ class UserController extends GetxController {
   final CollectionReference<Map<String, dynamic>> usersRef =
       FirebaseFirestore.instance.collection('users');
   late User? currentUser = FirebaseAuth.instance.currentUser;
-  late UserDetails aUsersDetails;
   late bool isAdmin;
 
   // Checks if user exists, creates user if not found
@@ -50,7 +49,7 @@ class UserController extends GetxController {
     DocumentSnapshot docSnapShot = await usersRef
         .doc(currentUser?.email)
         .collection("UserDetails")
-        .doc(currentUser?.uid)
+        .doc(_aUsersDetails.phoneNumber)
         .get();
     if (!docSnapShot.exists) {
       if (kDebugMode) {
@@ -60,18 +59,18 @@ class UserController extends GetxController {
       await usersRef
           .doc(currentUser?.email)
           .collection("UserDetails")
-          .doc(currentUser?.uid)
+          .doc(_aUsersDetails.phoneNumber)
           .set({
-        "name": aUsersDetails.name,
-        "shippingAddress": aUsersDetails.shippingAddress,
-        "paymentMethod": aUsersDetails.paymentMethod,
-        "phoneNumber": aUsersDetails.phoneNumber,
+        "name": _aUsersDetails.name,
+        "shippingAddress": _aUsersDetails.shippingAddress,
+        "paymentMethod": _aUsersDetails.paymentMethod,
+        "phoneNumber": _aUsersDetails.phoneNumber,
       });
       if (kDebugMode) {
         print("user_controller.dart - New User Details Added: " +
             currentUser!.email!);
       }
-      currentUser!.updateDisplayName(aUsersDetails.name);
+      currentUser!.updateDisplayName(_aUsersDetails.name);
       Get.back();
     } else {
       if (kDebugMode) {

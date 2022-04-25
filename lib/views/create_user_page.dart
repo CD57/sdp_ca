@@ -17,9 +17,12 @@ class _CreateUserPageState extends State<CreateUserPage> {
   final UserController userController = Get.put(UserController());
   final _inputFormKey = GlobalKey<FormState>();
 
-  late UserDetails _aUser;
   late double _deviceHeight;
   late double _deviceWidth;
+  late String name = "";
+  late String address = "";
+  late String phone = "";
+  late String payment = "";
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +77,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
                 initValue: "",
                 onSaved: (_value) {
                   setState(() {
-                    _aUser.name = _value;
+                    name = _value;
                   });
                 },
                 regex: r'.{3,}',
@@ -87,7 +90,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
                 initValue: "",
                 onSaved: (_value) {
                   setState(() {
-                    _aUser.shippingAddress = _value;
+                    address = _value;
                   });
                 },
                 regex: r'.{3,}',
@@ -100,7 +103,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
                 initValue: "",
                 onSaved: (_value) {
                   setState(() {
-                    _aUser.paymentMethod = _value;
+                    payment = _value;
                   });
                 },
                 regex: r'.{3,}',
@@ -113,7 +116,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
                 initValue: "",
                 onSaved: (_value) {
                   setState(() {
-                    _aUser.phoneNumber = _value;
+                    phone = _value;
                   });
                 },
                 regex: r".{8,}",
@@ -136,7 +139,12 @@ class _CreateUserPageState extends State<CreateUserPage> {
         onPressed: () async {
           if (_inputFormKey.currentState!.validate()) {
             _inputFormKey.currentState!.save();
-            userController.createUserDetails(_aUser);
+            userController.createUserDetails(UserDetails(
+                uid: phone,
+                name: name,
+                shippingAddress: address,
+                paymentMethod: payment,
+                phoneNumber: phone));
           } else {
             if (kDebugMode) {
               print(
