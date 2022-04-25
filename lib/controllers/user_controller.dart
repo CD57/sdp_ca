@@ -127,7 +127,7 @@ class IsAdmin implements UserState {
   @override
   handler(Stateful context) {
     if (kDebugMode) {
-      print("  Handler of StatusOn is being called!");
+      print("Handler: IsAdmin Called");
     }
     context.state = IsUser();
   }
@@ -142,7 +142,7 @@ class IsUser implements UserState {
   @override
   handler(Stateful context) {
     if (kDebugMode) {
-      print("  Handler of StatusOff is being called!");
+      print("Handler: IsUser Called!");
     }
     context.state = IsAdmin();
   }
@@ -155,9 +155,8 @@ class IsUser implements UserState {
 
 class Stateful {
   UserState _state;
-
   Stateful(this._state);
-
+  // ignore: unnecessary_getters_setters
   UserState get state => _state;
   set state(UserState newState) => _state = newState;
 

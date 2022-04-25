@@ -22,7 +22,9 @@ class ItemListWidget extends StatelessWidget {
       child: Column(
         children: <Widget>[
           GestureDetector(
-            onTap: () => userController.isAdmin ? adminOptions(context) : userOptions(context),
+            onTap: () => userController.isAdmin
+                ? adminOptions(context)
+                : userOptions(context),
             child: ListTile(
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

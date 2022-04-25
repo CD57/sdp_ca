@@ -123,8 +123,7 @@ class _BasketPageState extends State<BasketPage> {
                               onPressed: () async {
                                 if (_inputFormKey2.currentState!.validate()) {
                                   _inputFormKey2.currentState!.save();
-                                  await basketController
-                                      .createReview(_review);
+                                  await basketController.createReview(_review);
                                   Get.back();
                                 }
                                 setState(() {});

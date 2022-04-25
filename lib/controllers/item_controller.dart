@@ -93,7 +93,8 @@ class ItemController extends GetxController {
 
       docSnapShot = await itemsRef.doc(anItem.title).get();
       if (kDebugMode) {
-        print("item_controller.dart - Item Stock Updated: " + ItemModel.fromDocument(docSnapShot).stockLevel);
+        print("item_controller.dart - Item Stock Updated: " +
+            ItemModel.fromDocument(docSnapShot).stockLevel);
       }
       return ItemModel.fromDocument(docSnapShot);
     }

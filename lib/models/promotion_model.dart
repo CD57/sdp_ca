@@ -14,5 +14,6 @@ class PromotionModel {
   }
 
   @override
-  String toString() => 'PromotionModel(promoCode: $promoCode, discount: $promoDiscount)';
+  String toString() =>
+      'PromotionModel(promoCode: $promoCode, discount: $promoDiscount)';
 }

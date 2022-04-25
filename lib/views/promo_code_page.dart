@@ -20,7 +20,6 @@ class _PromoCodePageState extends State<PromoCodePage> {
   late String _promoCode;
   late String _promoDiscount;
 
-
   @override
   Widget build(BuildContext context) {
     if (kDebugMode) {
@@ -120,8 +119,7 @@ class _PromoCodePageState extends State<PromoCodePage> {
         onPressed: () {
           if (_inputFormKey.currentState!.validate()) {
             _inputFormKey.currentState!.save();
-            _promoController.createPromo(
-                _promoCode, _promoDiscount);
+            _promoController.createPromo(_promoCode, _promoDiscount);
             Get.back();
           } else {
             if (kDebugMode) {

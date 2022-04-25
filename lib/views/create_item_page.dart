@@ -152,7 +152,7 @@ class _CreateItemPageState extends State<CreateItemPage> {
       ),
     );
   }
- 
+
   Widget _customButton() {
     return CustomButton(
         name: "Add Item to Stock",
